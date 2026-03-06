@@ -1,0 +1,19 @@
+# Web framework
+flask>=3.0.0
+python-dotenv>=1.0.0
+Werkzeug>=3.0.0
+
+# Image processing / annotation
+Pillow>=10.0.0
+
+# ML model – HuggingFace Transformers + PyTorch CPU backend
+# (not needed in cloud deployments when PlantNet API key is set)
+transformers>=4.40.0
+torch>=2.2.0
+torchvision>=0.17.0
+
+# HTTP client (Facebook Graph API + PlantNet API)
+requests>=2.31.0
+
+# Image hosting (cloud deployments)
+cloudinary>=1.40.0

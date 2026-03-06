@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Results – Flower Recognizer</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <span class="logo">&#x1F338; Flower Recognizer</span>
+      </div>
+    </header>
+
+    <main class="container">
+      <h2 class="results-heading">Classification Results</h2>
+
+      {% if post_to_fb %} {% set fb_url = results | selectattr('fb_post_url') |
+      map(attribute='fb_post_url') | first %} {% set fb_err = results |
+      selectattr('fb_error') | map(attribute='fb_error') | first %} {% if fb_url
+      %}
+      <div class="fb-banner fb-banner--ok">
+        &#x2714; All photos posted to Facebook as one post
+        <a
+          href="{{ fb_url }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="
+            color: #1877f2;
+            text-decoration: underline;
+            margin-left: 0.5rem;
+          "
+          >View post</a
+        >
+      </div>
+      {% elif fb_err %}
+      <div class="fb-banner fb-banner--error">
+        &#x2718; Facebook upload failed
+        <details>
+          <summary>Details</summary>
+          {{ fb_err }}
+        </details>
+      </div>
+      {% endif %} {% endif %}
+
+      <div class="results-grid">
+        {% for r in results %}
+        <div class="result-card {% if r.error %}result-card--error{% endif %}">
+          {% if r.error %}
+          <div class="result-card__error">
+            <strong>{{ r.filename }}</strong><br />{{ r.error }}
+          </div>
+          {% else %}
+          <!-- Image: Cloudinary URL in cloud, local path on dev -->
+          <div class="result-card__image-wrap">
+            <img
+              src="{% if r.image_url %}{{ r.image_url }}{% else %}{{ url_for('uploaded_file', filename=r.image_local) }}{% endif %}"
+              alt="{{ r.label }}"
+              class="result-card__img"
+            />
+          </div>
+
+          <div class="result-card__body">
+            <h3 class="result-card__label">{{ r.label }}</h3>
+            <p class="result-card__confidence">
+              Confidence: <strong>{{ r.confidence }}</strong>
+            </p>
+            {% if r.low_confidence %}
+            <p class="low-confidence-warning">
+              &#x26A0; Low confidence — this species may not be in the model's
+              known categories.
+            </p>
+            {% endif %}
+            <p class="result-card__filename muted">{{ r.filename }}</p>
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="actions">
+        <a href="{{ url_for('index') }}" class="btn btn--primary"
+          >&#x2190; Classify more flowers</a
+        >
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        Powered by PlantNet API · Flask · Facebook Graph API v22
+      </div>
+    </footer>
+  </body>
+</html>

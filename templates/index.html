@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flower Recognizer</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <span class="logo">&#x1F338; Flower Recognizer</span>
+        <p class="tagline">
+          Upload flower photos — get instant AI classification &amp; post to
+          Facebook
+        </p>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Flash messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <ul class="flash-list">
+        {% for category, message in messages %}
+        <li class="flash flash--{{ category }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %} {% endwith %}
+
+      <section class="card upload-card">
+        <h2>Upload Images</h2>
+        <form
+          id="uploadForm"
+          action="{{ url_for('classify') }}"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <!-- Drop zone -->
+          <div id="dropZone" class="drop-zone">
+            <p class="drop-zone__label">
+              Drag &amp; drop JPG / PNG files here<br />or
+            </p>
+            <label for="imageInput" class="btn btn--secondary"
+              >Browse files</label
+            >
+            <input
+              id="imageInput"
+              type="file"
+              name="images"
+              accept=".jpg,.jpeg,.png"
+              multiple
+              hidden
+            />
+            <div id="previewGrid" class="preview-grid"></div>
+          </div>
+
+          <!-- Facebook toggle -->
+          <div class="option-row">
+            <label class="toggle">
+              <input type="checkbox" name="post_to_facebook" id="fbToggle" />
+              <span class="toggle__slider"></span>
+            </label>
+            <span class="option-label">
+              Automatically post to Facebook Page
+            </span>
+          </div>
+
+          <!-- Location input (optional) -->
+          <div class="form-group">
+            <label for="locationInput" class="form-label">
+              Location (optional)
+              <span class="form-hint">
+                Enter a location name to display in the post caption
+              </span>
+            </label>
+            <input
+              type="text"
+              id="locationInput"
+              name="location"
+              class="form-input"
+              placeholder="e.g., Baguio City, Manila Botanical Garden"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn--primary"
+            id="submitBtn"
+            disabled
+          >
+            Classify &amp; Upload
+          </button>
+        </form>
+      </section>
+
+      <!-- Loading overlay -->
+      <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+        <p>Classifying your flowers…</p>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        Powered by PlantNet API · Flask · Facebook Graph API v22
+      </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  </body>
+</html>

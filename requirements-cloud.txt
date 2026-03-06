@@ -1,0 +1,13 @@
+# Cloud deployment requirements — no torch/transformers needed
+# because PlantNet API handles classification remotely.
+#
+# Use this on Render / Railway / Fly.io:
+#   pip install -r requirements-cloud.txt
+
+flask>=3.0.0
+python-dotenv>=1.0.0
+Werkzeug>=3.0.0
+Pillow>=10.0.0
+requests>=2.31.0
+cloudinary>=1.40.0
+gunicorn>=22.0.0
